@@ -15,3 +15,19 @@ target_sources(main
  PRIVATE
   ${MAIN_SRC}
 )
+
+set(NN_SRC
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/nn.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/nn.h
+)
+
+add_library(nn)
+target_sources(nn
+ PRIVATE
+  ${NN_SRC}
+  )
+
+target_include_directories(nn
+ PUBLIC
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
