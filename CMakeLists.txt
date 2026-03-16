@@ -16,6 +16,11 @@ target_sources(main
   ${MAIN_SRC}
 )
 
+target_link_libraries(main
+  PUBLIC
+  nn
+)
+
 set(NN_SRC
   ${CMAKE_CURRENT_SOURCE_DIR}/src/nn.c
   ${CMAKE_CURRENT_SOURCE_DIR}/include/nn.h

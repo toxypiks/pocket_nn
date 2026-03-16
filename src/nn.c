@@ -22,4 +22,7 @@ void mat_sum(Mat dst, Mat a)
     (void) dst;
     (void) a;
 }
-void mat_print(void);
+void mat_print(Mat m)
+{
+    (void) m;
+}
