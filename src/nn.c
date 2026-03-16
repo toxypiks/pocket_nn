@@ -1,5 +1,6 @@
 #include "nn.h"
 #include <assert.h>
+#include <stdio.h>
 
 Mat mat_alloc(size_t rows, size_t cols)
 {
@@ -22,7 +23,15 @@ void mat_sum(Mat dst, Mat a)
     (void) dst;
     (void) a;
 }
+
+#define MAT_AT(m, i, j) (m).es[(i)*(m).cols + (j)] // put in parentheses in case of m, i or j being expressions e.g m + 1
+
 void mat_print(Mat m)
 {
-    (void) m;
+    for(size_t i = 0; i < m.rows; i++) {
+        for(size_t j = 0; j < m.cols; ++j) {
+            printf("%f ", MAT_AT(m, i, j));
+        }
+        printf("\n");
+    }
 }
