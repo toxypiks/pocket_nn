@@ -18,11 +18,11 @@ int main()
 
     Mat dst = mat_alloc(1,2);
 
-    mat_print(a);
+    MAT_PRINT(a);
     printf("-----------------------\n");
 
     mat_dot(dst, a, b);
-    mat_print(dst);
+    MAT_PRINT(dst);
 
     return 0;
 }

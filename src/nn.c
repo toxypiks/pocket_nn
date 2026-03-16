@@ -1,6 +1,8 @@
-#include "nn.h"
 #include <assert.h>
 #include <stdio.h>
+#include <math.h>
+
+#include "nn.h"
 
 float rand_float(void)
 {
@@ -24,6 +26,11 @@ void mat_rand(Mat m, float low, float high)
             MAT_AT(m, i, j) = rand_float()*(high - low) + low;
         }
     }
+}
+
+float sigmoidf(float x)
+{
+    return 1.f / (1.f + expf(-x));
 }
 
 void mat_fill(Mat m, float value)
@@ -62,12 +69,23 @@ void mat_sum(Mat dst, Mat a)
     }
 }
 
-void mat_print(Mat m)
+void mat_sig(Mat m)
 {
+    for (size_t i = 0; i < m.rows; ++i) {
+        for (size_t j = 0; j < m.cols; ++j) {
+            MAT_AT(m, i, j) = sigmoidf(MAT_AT(m, i, j));
+        }
+    }
+}
+
+void mat_print(Mat m, const char *name)
+{
+    printf("%s = [\n", name);
     for(size_t i = 0; i < m.rows; i++) {
         for(size_t j = 0; j < m.cols; ++j) {
             printf("%f ", MAT_AT(m, i, j));
         }
         printf("\n");
     }
+    printf("]\n");
 }
