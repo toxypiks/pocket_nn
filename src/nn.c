@@ -26,6 +26,15 @@ void mat_rand(Mat m, float low, float high)
     }
 }
 
+void mat_fill(Mat m, float value)
+{
+    for(size_t i = 0; i < m.rows; i++) {
+        for(size_t j = 0; j < m.cols; ++j) {
+            MAT_AT(m, i, j) = value;
+        }
+    }
+}
+
 void mat_dot(Mat dst, Mat a, Mat b)
 {
     (void) dst;
@@ -34,8 +43,13 @@ void mat_dot(Mat dst, Mat a, Mat b)
 }
 void mat_sum(Mat dst, Mat a)
 {
-    (void) dst;
-    (void) a;
+    assert(dst.rows == a.rows);
+    assert(dst.cols == a.cols);
+    for (size_t i = 0; i < dst.rows; ++i) {
+        for (size_t j = 0; j < dst.cols; ++j) {
+            MAT_AT(dst, i, j) += MAT_AT(a, i, j);
+        }
+    }
 }
 
 void mat_print(Mat m)
