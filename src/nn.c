@@ -14,6 +14,7 @@ Mat mat_alloc(size_t rows, size_t cols)
     Mat m;
     m.rows = rows;
     m.cols = cols;
+    m.stride = cols;
     m.es = malloc(sizeof(*m.es)*rows*cols);
     assert(m.es != NULL);
     return m;
@@ -59,6 +60,27 @@ void mat_dot(Mat dst, Mat a, Mat b)
             for (size_t k = 0; k < n; ++k) {
                 MAT_AT(dst, i, j) += MAT_AT(a, i, k)* MAT_AT(b, k, j);
             }
+        }
+    }
+}
+
+Mat mat_row(Mat m, size_t row)
+{
+    return (Mat) {
+        .rows = 1,
+        .cols = m.cols,
+        .stride = m.stride,
+        .es = &MAT_AT(m, row, 0),
+    };
+}
+
+void mat_copy(Mat dst, Mat src)
+{
+    assert(dst.rows == src.rows);
+    assert(dst.cols == src.cols);
+    for (size_t i = 0; i < dst.rows; ++i) {
+        for (size_t j = 0; j < dst.cols; ++j) {
+            MAT_AT(dst, i, j) = MAT_AT(src, i, j);
         }
     }
 }
@@ -138,5 +160,14 @@ void nn_rand(NN nn, float low, float high)
     for (size_t i = 0; i < nn.count; ++i) {
         mat_rand(nn.ws[i], low, high);
         mat_rand(nn.bs[i], low, high);
+    }
+}
+
+void nn_forward(NN nn)
+{
+    for (size_t i = 0; i < nn.count; ++i) {
+        mat_dot(nn.as[i+1], nn.as[i], nn.ws[i]); //passing data with weights to next layer
+        mat_sum(nn.as[i+1], nn.bs[i]); //adding biases
+        mat_sig(nn.as[i+1]); //activating layer
     }
 }

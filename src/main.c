@@ -3,33 +3,42 @@
 
 #include "nn.h"
 
+float td[] = {
+    0, 0, 0,
+    0, 1, 1,
+    1, 0, 1,
+    1, 1, 0,
+};
+
 int main()
 {
     srand(time(0));
+    //NN_PRINT(nn);
+
+    size_t stride = 3;
+    size_t n = sizeof(td)/sizeof(td[0])/stride;
+
+    Mat ti = {
+        .rows = n,
+        .cols = 2,
+        .stride = stride,
+        .es = td
+    };
+
+    Mat to = {
+        .rows = n,
+        .cols = 1,
+        .stride = stride,
+        .es = td + 2,
+    };
+
     size_t arch[] = {2, 2, 1};
     NN nn = nn_alloc(arch, ARRAY_LEN(arch));
     nn_rand(nn, 0, 1);
-    NN_PRINT(nn);
 
-    return 0;
-
-    Mat a = mat_alloc(1, 2);
-    mat_rand(a, 5, 10);
-
-    float id_data[4] = {
-        1, 0,
-        0, 1
-    };
-
-    Mat b = {.rows = 2, .cols = 2, .es = id_data};
-
-    Mat dst = mat_alloc(1,2);
-
-    MAT_PRINT(a);
-    printf("-----------------------\n");
-
-    mat_dot(dst, a, b);
-    MAT_PRINT(dst);
+    mat_copy(NN_INPUT(nn), mat_row(ti, 1));
+    nn_forward(nn);
+    MAT_PRINT(NN_OUTPUT(nn));
 
     return 0;
 }

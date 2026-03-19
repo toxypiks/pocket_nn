@@ -6,10 +6,11 @@
 typedef struct {
     size_t rows;
     size_t cols;
+    size_t stride;
     float *es; // points to start value of matrix
 } Mat;
 
-#define MAT_AT(m, i, j) (m).es[(i)*(m).cols + (j)] // put in parentheses in case of m, i or j being expressions e.g m + 1
+#define MAT_AT(m, i, j) (m).es[(i)*(m).stride + (j)] // put in parentheses in case of m, i or j being expressions e.g m + 1
 #define MAT_PRINT(m) mat_print(m, #m, 0)
 
 float rand_float(void);
@@ -17,6 +18,8 @@ float sigmoidf(float x);
 
 Mat mat_alloc(size_t rows, size_t cols);
 void mat_rand(Mat m, float low, float high);
+Mat mat_row(Mat m, size_t row);
+void mat_copy(Mat dst, Mat src);
 void mat_fill(Mat m, float value);
 void mat_dot(Mat dst, Mat a, Mat b);
 void mat_sum(Mat dst, Mat a);
@@ -32,9 +35,13 @@ typedef struct {
     Mat *as;
 } NN;
 
+#define NN_INPUT(nn) (nn).as[0]
+#define NN_OUTPUT(nn) (nn).as[(nn).count]
+
 NN nn_alloc(size_t *arch, size_t arch_count);
 void nn_print(NN nn, const char *name);
 #define NN_PRINT(nn) nn_print(nn, #nn);
 void nn_rand(NN nn, float low, float high);
+void nn_forward(NN nn);
 
 #endif // NN_H
