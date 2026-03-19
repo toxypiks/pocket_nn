@@ -28,6 +28,11 @@ void mat_rand(Mat m, float low, float high)
     }
 }
 
+float cost(Mat m, Mat ti, Mat to)
+{
+    assert(ti.rows == to.rows);
+}
+
 float sigmoidf(float x)
 {
     return 1.f / (1.f + expf(-x));
@@ -78,14 +83,52 @@ void mat_sig(Mat m)
     }
 }
 
-void mat_print(Mat m, const char *name)
+void mat_print(Mat m, const char *name, size_t padding)
 {
-    printf("%s = [\n", name);
+    printf("%*s%s = [\n", (int) padding, "", name);
     for(size_t i = 0; i < m.rows; i++) {
+        printf("%*s   ", (int) padding, "");
         for(size_t j = 0; j < m.cols; ++j) {
             printf("%f ", MAT_AT(m, i, j));
         }
         printf("\n");
+    }
+    printf("%*s]\n", (int) padding, "");
+}
+
+NN nn_alloc(size_t *arch, size_t arch_count)
+{
+    assert(arch_count > 0);
+
+    NN nn;
+    nn.count = arch_count - 1; //minus input
+    nn.ws = malloc(sizeof(*nn.ws)*nn.count);
+    assert(nn.ws != NULL);
+    nn.bs = malloc(sizeof(*nn.bs)*nn.count);
+    assert(nn.bs != NULL);
+    nn.as = malloc(sizeof(*nn.as)*(nn.count + 1));
+    assert(nn.as != NULL);
+
+    nn.as[0] = mat_alloc(1, arch[0]); // input layer
+    for (size_t i = 1; i < arch_count; ++i) {
+        nn.ws[i-1] = mat_alloc(nn.as[i-1].cols, arch[i]); //weights for inputs and layers
+        nn.bs[i-1] = mat_alloc(1, arch[i]);
+        nn.as[i]   = mat_alloc(1, arch[i]);
+    }
+    return nn;
+}
+
+void nn_print(NN nn, const char *name)
+{
+    char buf[256];
+    printf("%s = [\n", name);
+    Mat *ws = nn.ws;
+    Mat *bs = nn.bs;
+    for (size_t i = 0; i < nn.count; ++i) {
+        snprintf(buf, sizeof(buf), "ws%zu", i);
+        mat_print(nn.ws[i], buf, 4);
+        snprintf(buf, sizeof(buf), "bs%zu", i);
+        mat_print(nn.bs[i], buf, 4);
     }
     printf("]\n");
 }

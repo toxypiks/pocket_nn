@@ -5,6 +5,12 @@
 
 int main()
 {
+    size_t arch[] = {2, 2, 1};
+    NN nn = nn_alloc(arch, ARRAY_LEN(arch));
+    NN_PRINT(nn);
+
+    return 0;
+
     srand(time(0));
     Mat a = mat_alloc(1, 2);
     mat_rand(a, 5, 10);
