@@ -132,3 +132,11 @@ void nn_print(NN nn, const char *name)
     }
     printf("]\n");
 }
+
+void nn_rand(NN nn, float low, float high)
+{
+    for (size_t i = 0; i < nn.count; ++i) {
+        mat_rand(nn.ws[i], low, high);
+        mat_rand(nn.bs[i], low, high);
+    }
+}

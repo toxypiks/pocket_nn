@@ -35,5 +35,6 @@ typedef struct {
 NN nn_alloc(size_t *arch, size_t arch_count);
 void nn_print(NN nn, const char *name);
 #define NN_PRINT(nn) nn_print(nn, #nn);
+void nn_rand(NN nn, float low, float high);
 
 #endif // NN_H
