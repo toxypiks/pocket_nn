@@ -171,3 +171,35 @@ void nn_forward(NN nn)
         mat_sig(nn.as[i+1]); //activating layer
     }
 }
+
+float nn_cost(NN nn, Mat ti, Mat to)
+{
+    assert(ti.rows == to.rows);
+    assert(to.cols == NN_OUTPUT(nn).cols);
+    size_t n = ti.rows;
+
+    float c = 0;
+    for (size_t i = 0; i < n; ++i) {
+        Mat x = mat_row(ti, i);
+        Mat y = mat_row(to, i);
+
+        mat_copy(NN_INPUT(nn), x);
+        nn_forward(nn);
+
+        size_t q = to.cols;
+        for (size_t j = 0; j < q; ++j) {
+            float d = MAT_AT(NN_OUTPUT(nn), 0, j) - MAT_AT(y, 0, j);
+            c += d*d;
+        }
+    }
+    return c/n;
+}
+
+void nn_finite_diff(NN nn, NN g, float eps, Mat ti, Mat to)
+{
+    (void) nn;
+    (void) g;
+    (void) eps;
+    (void) ti;
+    (void) to;
+}

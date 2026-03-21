@@ -199,7 +199,7 @@ void nn_rand(NN nn, float low, float high);
  * @param nn Neural network
  */
 void nn_forward(NN nn);
-void nn_cost(NN nn, Mat ti, Mat to);
+float nn_cost(NN nn, Mat ti, Mat to);
 void nn_finite_diff(NN nn, NN g, float eps, Mat ti, Mat to);
 
 #endif // NN_H

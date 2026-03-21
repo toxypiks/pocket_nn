@@ -36,9 +36,7 @@ int main()
     NN nn = nn_alloc(arch, ARRAY_LEN(arch));
     nn_rand(nn, 0, 1);
 
-    mat_copy(NN_INPUT(nn), mat_row(ti, 1));
-    nn_forward(nn);
-    MAT_PRINT(NN_OUTPUT(nn));
+    printf("cost = %f\n", nn_cost(nn, ti, to));
 
     return 0;
 }
