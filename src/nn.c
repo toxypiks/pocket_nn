@@ -219,3 +219,20 @@ void nn_finite_diff(NN nn, NN g, float eps, Mat ti, Mat to)
         }
     }
 }
+
+void nn_learn(NN nn, NN g, float rate)
+{
+    for (size_t i = 0; i < nn.count; ++i) {
+        for (size_t j = 0; j < nn.ws[i].rows; ++j) {
+            for (size_t k = 0; k < nn.ws[i].cols; ++k) {
+                MAT_AT(nn.ws[i], j, k) -= rate*MAT_AT(g.ws[i], j, k);
+            }
+        }
+
+        for (size_t j = 0; j < nn.bs[i].rows; ++j) {
+            for (size_t k = 0; k < nn.bs[i].cols; ++k) {
+                MAT_AT(nn.bs[i], j, k) -= rate*MAT_AT(g.bs[i], j, k);
+            }
+        }
+    }
+}
